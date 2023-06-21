@@ -12,10 +12,12 @@ class GameComponent extends Component<any, any> {
     super(props);
     this.state = {
       selectedDice: "",
-      player1Score: 2,
-      player2Score: 2,
+      player1Score: 0,
+      player2Score: 0,
       player1Point: 0,
       player2Point: 0,
+      activClass: "active",
+      currentPlayer: 1
     };
   }
 
@@ -23,13 +25,23 @@ class GameComponent extends Component<any, any> {
     const dices = [dice1, dice2, dice3, dice4, dice5, dice6];
     const rand = Math.floor(Math.random() * dices.length);
     const selectedDice = dices[rand];
-    this.setState({ selectedDice });
+    this.state.currentPlayer === 1 ?
+      this.setState((prevState: any) => ({
+        selectedDice,
+        player1Point: rand !== 0 ? prevState.player1Point + rand : 0,
+        currentPlayer: rand !== 0 ? prevState.currentPlayer : 2
+      }))
+      : this.setState((prevState: any) => ({
+        selectedDice,
+        player2Point: rand !== 0 ? prevState.player2Point + rand : 0,
+        currentPlayer: rand !== 0 ? prevState.currentPlayer : 1
+      }))
   };
 
-  handleNewGame = () => this.setState({ player1Score: 0, player2Score: 0, selectedDice: "", player1Point: 0, player2Point: 0 });
+  handleNewGame = () => this.setState({ player1Score: 0, player2Score: 0, selectedDice: "", player1Point: 0, player2Point: 0, currentPlayer: 1 });
 
   render() {
-    const { selectedDice, player1Score, player2Score, player1Point, player2Point } = this.state;
+    const { selectedDice, player1Score, player2Score, player1Point, player2Point, activClass, currentPlayer } = this.state;
     return (
       <div className="container">
         <div className="main">
@@ -41,7 +53,7 @@ class GameComponent extends Component<any, any> {
               <div className="hold-btn btn--hold">📥 Hold</div>
             </div>
           </div>
-          <div className="main-left players active">
+          <div className={`main-left players  ${currentPlayer == 1 ? activClass : ""}`}>
             <div>
               <div className="player-name">Player 1</div>
               <div className="player-score">{player1Score}</div>
@@ -51,7 +63,7 @@ class GameComponent extends Component<any, any> {
               <div className="point">{player1Point}</div>
             </div>
           </div>
-          <div className="main-right players">
+          <div className={`main-right players ${currentPlayer == 2 ? activClass : ""}`}>
             <div>
               <div className="player-name">Player 2</div>
               <div className="player-score">{player2Score}</div>
