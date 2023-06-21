@@ -28,12 +28,12 @@ class GameComponent extends Component<any, any> {
     this.state.currentPlayer === 1 ?
       this.setState((prevState: any) => ({
         selectedDice,
-        player1Point: rand !== 0 ? prevState.player1Point + rand : 0,
+        player1Point: rand !== 0 ? prevState.player1Point + rand + 1 : 0,
         currentPlayer: rand !== 0 ? prevState.currentPlayer : 2
       }))
       : this.setState((prevState: any) => ({
         selectedDice,
-        player2Point: rand !== 0 ? prevState.player2Point + rand : 0,
+        player2Point: rand !== 0 ? prevState.player2Point + rand + 1 : 0,
         currentPlayer: rand !== 0 ? prevState.currentPlayer : 1
       }));
   };
@@ -43,21 +43,35 @@ class GameComponent extends Component<any, any> {
   handleHold = () => {
     this.state.currentPlayer === 1 ?
       this.setState((prevState: any) => ({
-        player1Score: prevState.player1Score + prevState.player1Point
+        player1Score: prevState.player1Score + prevState.player1Point,
+        player1Point: 0,
+        currentPlayer: 2,
+        selectedDice: ""
+
       }))
       : this.setState((prevState: any) => ({
-        player2Score: prevState.player2Score + prevState.player2Point
+        player2Score: prevState.player2Score + prevState.player2Point,
+        player2Point: 0,
+        currentPlayer: 1,
+        selectedDice: ""
       }));
   };
 
-  checkWinner = () => {
-    this.state.player1Score > this.state.player2Score ? alert('Winner Player1 🥱')
-    : alert('Winner Player2 🥱')
+  Winner = () => {
+    if (this.state.player1Score >= 100) {
+      alert('Winner Player1 🥱');
+      this.handleNewGame();
+    }
+    else if (this.state.player2Score >= 100) {
+      alert('Winner Player2 🥱');
+      this.handleNewGame();
+    }
   };
 
 
   render() {
     const { selectedDice, player1Score, player2Score, player1Point, player2Point, activClass, currentPlayer } = this.state;
+    this.Winner();
     return (
       <div className="container">
         <div className="main">
