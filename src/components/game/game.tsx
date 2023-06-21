@@ -35,10 +35,26 @@ class GameComponent extends Component<any, any> {
         selectedDice,
         player2Point: rand !== 0 ? prevState.player2Point + rand : 0,
         currentPlayer: rand !== 0 ? prevState.currentPlayer : 1
-      }))
+      }));
   };
 
   handleNewGame = () => this.setState({ player1Score: 0, player2Score: 0, selectedDice: "", player1Point: 0, player2Point: 0, currentPlayer: 1 });
+
+  handleHold = () => {
+    this.state.currentPlayer === 1 ?
+      this.setState((prevState: any) => ({
+        player1Score: prevState.player1Score + prevState.player1Point
+      }))
+      : this.setState((prevState: any) => ({
+        player2Score: prevState.player2Score + prevState.player2Point
+      }));
+  };
+
+  checkWinner = () => {
+    this.state.player1Score > this.state.player2Score ? alert('Winner Player1 🥱')
+    : alert('Winner Player2 🥱')
+  };
+
 
   render() {
     const { selectedDice, player1Score, player2Score, player1Point, player2Point, activClass, currentPlayer } = this.state;
@@ -50,7 +66,7 @@ class GameComponent extends Component<any, any> {
             <div className="new-game-btn btn--new" onClick={this.handleNewGame}> 🔄 NEW GAME </div>
             <div className="center-bottom">
               <div className="roll-btn btn--roll" onClick={this.handleDice}> 🎲 ROOL DICE </div>
-              <div className="hold-btn btn--hold">📥 Hold</div>
+              <div className="hold-btn btn--hold" onClick={this.handleHold} >📥 Hold</div>
             </div>
           </div>
           <div className={`main-left players  ${currentPlayer == 1 ? activClass : ""}`}>
